@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  User_id:Number,
   name: {
     type: String,
     required:true
@@ -18,6 +20,8 @@ const UserSchema = new Schema({
     default:false
   }
 },{timestamps: true});
+
+UserSchema.plugin(AutoIncrement, { inc_field: 'User_id' });
 
 let User = mongoose.model("User", UserSchema);
 
