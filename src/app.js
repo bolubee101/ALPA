@@ -1,4 +1,5 @@
 const express = require('express');
+const cors=require("cors");
 const mongoose = require('mongoose');
 
 const configuration = require('./config/configuration');
@@ -17,6 +18,7 @@ db.once('open', function () {
 
 // initialize app
 const app = express();
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 const apiRouter = require('./components/apiRouter');
 app.use('/api/v1', apiRouter);
