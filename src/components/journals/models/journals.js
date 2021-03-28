@@ -17,7 +17,6 @@ const AuthorSchema = new Schema({
 
 const JournalSchema = new Schema(
   {
-    id: Number,
     title: {
       type: String,
       required: true,
@@ -43,9 +42,6 @@ const JournalSchema = new Schema(
     issue: {
       type: String,
     },
-    pagination: {
-      type: String,
-    },
     issn: {
       type: String,
     },
@@ -55,10 +51,13 @@ const JournalSchema = new Schema(
     abstract: {
       type: String,
     },
+    file_link: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
-JournalSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 let Journal = mongoose.model('Journal', JournalSchema);
 

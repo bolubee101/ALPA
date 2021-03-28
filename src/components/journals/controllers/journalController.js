@@ -7,11 +7,10 @@ const GetAllJournals = async (req, res) => {
   // await Journals.create(seed);
   try {
     let journals = await Journals.find({}).select({
-      id: 1,
       'year of publication': 1,
       title: 1,
       authors: 1,
-      _id: 0,
+      _id: 1,
     });
     let response = new ResponseObject(
       200,
@@ -33,8 +32,8 @@ const GetAllJournals = async (req, res) => {
 const GetJournalsById = async (req, res) => {
   const id = req.params.id;
   try {
-    let journal = await Journals.findOne({ id }).select({
-      _id: 0,
+    let journal = await Journals.findById(id).select({
+      _id: 1,
       title: 1,
       'publication type': 1,
       'year of publication':1,
@@ -47,6 +46,8 @@ const GetJournalsById = async (req, res) => {
       issue: 1,
       pagination: 1,
       issn: 1,
+      abstract:1,
+      file_link:1
     });
     if (journal) {
       let response = new ResponseObject(
