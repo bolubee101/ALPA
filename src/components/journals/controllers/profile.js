@@ -1,6 +1,7 @@
 const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
-const User = require('../../authentication/routes/userAuthentication')
+const User = require('../../authentication/models/users');
+const Journal = require('../models/journals');
 
 function verifyToken(req, res, next) {
   const tokenHeader = req.headers['authorization']
@@ -14,3 +15,17 @@ function verifyToken(req, res, next) {
       })
   }
 }
+
+const getUser = async id => {
+  const user = await User.findById(id)
+  console.log(user)
+  journalIds = user.journals
+  user.journals = []
+  for (let journalId of journalIds) {
+    let journal = await Journal.findById(journalId)
+    user.journals.push(journal)
+  }
+  res.json({user})
+}
+
+module.exports.getUser = getUser

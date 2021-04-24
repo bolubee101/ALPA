@@ -1,5 +1,7 @@
 const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
+const configuration = require('../../../config/configuration');
+
 const GetAllJournals = async (req, res) => {
   // for(i of seed){
   //     delete i["_id"];
@@ -78,7 +80,7 @@ const GetJournalsById = async (req, res) => {
 };
 
 const createJournal = async (req, res) => {
-  jwt.verify(req.token, SECRET_KEY, async (error, user) => {
+  jwt.verify(req.token, configuration.jwtsecret, async (error, user) => {
     if (error) {
       let response = new ResponseObject(400, error.message, 'error', null);
       res.status(response.statusCode);
@@ -87,20 +89,14 @@ const createJournal = async (req, res) => {
     } else {
         try {
           let {
-            title, publication_type,
-            year_of_publication, authors,
-            volume, start_page,
-            issue, issn,
-            google_scholar, abstract,
-            file_link
+            title, publication_type, year_of_publication, authors,
+            volume, start_page, issue, issn,
+            google_scholar, abstract, file_link
           } = req.body
           let journal = await Journals.create({
-            title, publication_type,
-            year_of_publication, authors,
-            volume, start_page,
-            issue, issn,
-            google_scholar,abstract,
-            file_link
+            title, publication_type, year_of_publication, authors,
+            volume, start_page, issue, issn,
+            google_scholar,abstract, file_link
           })
           user.journals.push(journal._id)
           user.save()
