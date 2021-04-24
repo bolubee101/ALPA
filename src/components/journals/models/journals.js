@@ -59,8 +59,6 @@ const JournalSchema = new Schema(
   { timestamps: true }
 );
 
-const UserSchema
-
 let Journal = mongoose.model('Journal', JournalSchema);
 
 module.exports = Journal;
