@@ -18,7 +18,13 @@ const UserSchema = new Schema({
   verified:{
     type:Boolean,
     default:false
-  }
+  },
+  journals: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Journal"
+    }
+  ]
 },{timestamps: true});
 
 UserSchema.plugin(AutoIncrement, { inc_field: 'User_id' });
