@@ -76,5 +76,45 @@ const GetJournalsById = async (req, res) => {
     res.json('error');
   }
 };
+
+const createJournal = async (req, res) => {
+  jwt.verify(req.token, SECRET_KEY, async (error, user) => {
+    if (error) {
+      let response = new ResponseObject(400, error.message, 'error', null);
+      res.status(response.statusCode);
+      delete response.statusCode;
+      res.json(response);
+    } else {
+        try {
+          let {
+            title, publication_type,
+            year_of_publication, authors,
+            volume, start_page,
+            issue, issn,
+            google_scholar, abstract,
+            file_link
+          } = req.body
+          let journal = await Journals.create({
+            title, publication_type,
+            year_of_publication, authors,
+            volume, start_page,
+            issue, issn,
+            google_scholar,abstract,
+            file_link
+          })
+          user.journals.push(journal._id)
+          user.save()
+          let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
+          res.status(resp.statusCode).json(resp)
+      } catch (error) {
+          console.log(error)
+          let resp = new ResponseObject(500, resp.error, 'error', {})
+          res.status(resp.statusCode).json({message: "Something went wrong"})
+      }
+    } 
+  })
+}
+
 module.exports.GetAllJournals = GetAllJournals;
 module.exports.GetJournalsById = GetJournalsById;
+module.exports.createJournal = createJournal

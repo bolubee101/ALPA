@@ -20,6 +20,7 @@ const register = async (userDTO) => {
       let hash = await bcrypt.hash(userDTO.password, 10);
       userDTO.password = hash;
       let user = new User(userDTO);
+      user.journals = []
       await user.save();
       var token = jwt.sign({ email: userDTO.email }, config.jwtsecret);
       delete userDTO.password;
