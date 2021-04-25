@@ -7,15 +7,13 @@ const jwt = require('jsonwebtoken');
 
 const verifyToken = async (req, res, next) => {
   const tokenHeader = req.headers['authorization']
-  console.log(tokenHeader)
   if (typeof tokenHeader !== 'undefined') {
       const token = tokenHeader.split(' ')[1]
-      console.log(token)
       const {email} = await jwt.verify(token, jwtsecret)
       req.email = email
       next()
   } else {
-      res.status(403).json({
+      res.status(401).json({
           error: 'Unauthorized'
       })
   }
@@ -25,6 +23,6 @@ let GetAllJournals = journals.GetAllJournals;
 let GetJournalsById = journals.GetJournalsById;
 router.get('/', GetAllJournals);
 router.get('/:id', GetJournalsById);
-router.get('/profile', verifyToken, getUser)
+router.get('/profile/:id', verifyToken, getUser)
 
 module.exports = router;

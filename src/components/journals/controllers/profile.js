@@ -5,9 +5,12 @@ const Journal = require('../models/journals');
 
 const getUser = async (req, res) => {
   try {
-    const {email} = req
-    const user = await User.findOne({email})
-    delete user.password
+    const user = await User.findOne({email: req.email})
+    if (user.id !== req.params.id) {
+      let resp = new ResponseObject(500, "You are not authorized to fetch that!", 'Unauthorized', {})
+      return res.status(resp.statusCode).json(resp.data) 
+    }
+    delete user.password;
     journalIds = user.journals
     user.journals = []
     for (let journalId of journalIds) {
