@@ -13,7 +13,7 @@ const s3 = new AWS.S3({
 
 const uploadImage = (fileName, buffer) => {
   let params = {
-    Bucket: process.env.BUCKE_NAME,
+    Bucket: process.env.AWS_BUCKET,
     Key: `${v4()}.${fileName[fileName.length-1]}`,
     Body: buffer
   }
@@ -116,11 +116,12 @@ const createJournal = async (req, res) => {
       volume, start_page, issue, issn,
       google_scholar, abstract
     } = req.body
-    const {file} = req
+    if (!authors) {authors == []}
+    const file = req.file
     const file_link = uploadImage(file.originalName.split('.'), file.buffer)
     if (!file) {
       let resp = new ResponseObject(500, "Error uploading file", 'error', null)
-      res.status(resp.statusCode).json(resp)
+      return res.status(resp.statusCode).json(resp)
     }
     let journal = await Journals.create({
       title, 'publication type': publication_type, 
@@ -131,11 +132,11 @@ const createJournal = async (req, res) => {
     user.journals.push(journal._id)
     user.save()
     let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
-    res.status(resp.statusCode).json(resp)
+    return res.status(resp.statusCode).json(resp)
   } catch (error) {
     console.log(error)
     let resp = new ResponseObject(500, error.message, 'error', {})
-    res.status(resp.statusCode).json({message: "Something went wrong"})
+    return res.status(resp.statusCode).json({message: "Something went wrong"})
   } 
 }
 

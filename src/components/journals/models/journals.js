@@ -28,8 +28,7 @@ const JournalSchema = new Schema(
     'year of publication': {
       type: String,
     },
-    'author temp': [AuthorSchema],
-    authors: [],
+    authors: { type : Array , "default" : [] },//collaborators
     'journal title': {
       type: String,
     },

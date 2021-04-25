@@ -28,13 +28,14 @@ app.use(express.json({ limit: '10mb' }));
 
 const storage = multer.memoryStorage({
   destination: (req, file, cb) => {
-    cb(null, '../assets')
+    cb(null, '')
   }
 })
 
 const upload = multer({storage}).single('file')
 
 const apiRouter = require('./components/apiRouter');
+const ResponseObject = require('./utils/responseObject');
 app.use('/api/v1', apiRouter);
 
 const PORT = process.env.PORT || 3333;
