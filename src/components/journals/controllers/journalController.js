@@ -1,6 +1,7 @@
 const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
 const configuration = require('../../../config/configuration');
+const User = require('../../authentication/models/users');
 
 const GetAllJournals = async (req, res) => {
   // for(i of seed){
@@ -80,35 +81,33 @@ const GetJournalsById = async (req, res) => {
 };
 
 const createJournal = async (req, res) => {
-  jwt.verify(req.token, configuration.jwtsecret, async (error, user) => {
-    if (error) {
-      let response = new ResponseObject(400, error.message, 'error', null);
-      res.status(response.statusCode);
-      delete response.statusCode;
-      res.json(response);
-    } else {
-        try {
-          let {
-            title, publication_type, year_of_publication, authors,
-            volume, start_page, issue, issn,
-            google_scholar, abstract, file_link
-          } = req.body
-          let journal = await Journals.create({
-            title, publication_type, year_of_publication, authors,
-            volume, start_page, issue, issn,
-            google_scholar,abstract, file_link
-          })
-          user.journals.push(journal._id)
-          user.save()
-          let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
-          res.status(resp.statusCode).json(resp)
-      } catch (error) {
-          console.log(error)
-          let resp = new ResponseObject(500, error.message, 'error', {})
-          res.status(resp.statusCode).json({message: "Something went wrong"})
-      }
-    } 
-  })
+  let user = await User.findOne({email: req.email})
+  if (!user) {
+    let response = new ResponseObject(401, "You are not authorized", 'Unauthorized', null);
+    res.status(response.statusCode);
+    delete response.statusCode;
+    res.json(response);
+  }
+  try {
+    let {
+      title, publication_type, year_of_publication, authors,
+      volume, start_page, issue, issn,
+      google_scholar, abstract, file_link
+    } = req.body
+    let journal = await Journals.create({
+      title, publication_type, year_of_publication, authors,
+      volume, start_page, issue, issn,
+      google_scholar,abstract, file_link
+    })
+    user.journals.push(journal._id)
+    user.save()
+    let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
+    res.status(resp.statusCode).json(resp)
+  } catch (error) {
+    console.log(error)
+    let resp = new ResponseObject(500, error.message, 'error', {})
+    res.status(resp.statusCode).json({message: "Something went wrong"})
+  } 
 }
 
 module.exports.GetAllJournals = GetAllJournals;
