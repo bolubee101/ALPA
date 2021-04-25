@@ -135,8 +135,8 @@ const createJournal = async (req, res) => {
     return res.status(resp.statusCode).json(resp)
   } catch (error) {
     console.log(error)
-    let resp = new ResponseObject(500, error.message, 'error', {})
-    return res.status(resp.statusCode).json({message: "Something went wrong"})
+    let resp = new ResponseObject(500, error.message, 'error', null)
+    return res.status(resp.statusCode).json({resp})
   } 
 }
 

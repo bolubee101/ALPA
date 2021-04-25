@@ -2,9 +2,7 @@ const express = require('express');
 const cors=require("cors");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
-const multer = require('multer')
-const AWS = require('aws-sdk')
-const {v4} = require('uuid')
+
 dotenv.config()
 
 const configuration = require('./config/configuration');
@@ -25,14 +23,6 @@ db.once('open', function () {
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
-
-const storage = multer.memoryStorage({
-  destination: (req, file, cb) => {
-    cb(null, '')
-  }
-})
-
-const upload = multer({storage}).single('file')
 
 const apiRouter = require('./components/apiRouter');
 const ResponseObject = require('./utils/responseObject');
