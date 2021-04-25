@@ -95,8 +95,9 @@ const createJournal = async (req, res) => {
       google_scholar, abstract, file_link
     } = req.body
     let journal = await Journals.create({
-      title, publication_type, year_of_publication, authors,
-      volume, start_page, issue, issn,
+      title, 'publication type': publication_type, 
+      'year of publication': year_of_publication, authors,
+      volume, 'start page': start_page, issue, issn,
       google_scholar,abstract, file_link
     })
     user.journals.push(journal._id)
