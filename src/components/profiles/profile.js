@@ -1,7 +1,6 @@
-const Journals = require('../models/journals');
-const ResponseObject = require('../../../utils/responseObject');
-const User = require('../../authentication/models/users');
-const Journal = require('../models/journals');
+const ResponseObject = require('../../utils/responseObject');
+const User = require('../authentication/models/users');
+const Journal = require('../journals/models/journals');
 
 const getUser = async (req, res) => {
   try {
