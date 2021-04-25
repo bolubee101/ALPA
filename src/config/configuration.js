@@ -1,3 +1,6 @@
+const dotenv = require('dotenv')
+
+dotenv.config()
 // This should be your own database url
 module.exports = {
   database:
