@@ -1,7 +1,29 @@
+const AWS = require('aws-sdk')
+const {v4} = require('uuid')
+const dotenv = require('dotenv')
 const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
-const configuration = require('../../../config/configuration');
 const User = require('../../authentication/models/users');
+dotenv.config()
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ID,
+  secretAccessKey: process.env.AWS_SECRET
+})
+
+const uploadImage = (fileName, buffer) => {
+  let params = {
+    Bucket: process.env.BUCKE_NAME,
+    Key: `${v4()}.${fileName[fileName.length-1]}`,
+    Body: buffer
+  }
+  s3.upload(params, (err, data) => {
+    if (err) {
+      return 
+    }
+    return data.Location
+  })
+}
 
 const GetAllJournals = async (req, res) => {
   // for(i of seed){
@@ -92,8 +114,14 @@ const createJournal = async (req, res) => {
     let {
       title, publication_type, year_of_publication, authors,
       volume, start_page, issue, issn,
-      google_scholar, abstract, file_link
+      google_scholar, abstract
     } = req.body
+    const {file} = req
+    const file_link = uploadImage(file.originalName.split('.'), file.buffer)
+    if (!file) {
+      let resp = new ResponseObject(500, "Error uploading file", 'error', null)
+      res.status(resp.statusCode).json(resp)
+    }
     let journal = await Journals.create({
       title, 'publication type': publication_type, 
       'year of publication': year_of_publication, authors,
