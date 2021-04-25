@@ -3,29 +3,23 @@ const ResponseObject = require('../../../utils/responseObject');
 const User = require('../../authentication/models/users');
 const Journal = require('../models/journals');
 
-function verifyToken(req, res, next) {
-  const tokenHeader = req.headers['authorization']
-  if (typeof tokenHeader !== 'undefined') {
-      const token = tokenHeader.split(' ')[1]
-      req.token = token
-      next()
-  } else {
-      res.status(403).json({
-          error: 'Unauthorized'
-      })
-  }
-}
-
-const getUser = async id => {
-  const user = await User.findById(id)
-  console.log(user)
-  journalIds = user.journals
-  user.journals = []
-  for (let journalId of journalIds) {
-    let journal = await Journal.findById(journalId)
-    user.journals.push(journal)
-  }
+const getUser = async (req, res) => {
+  try {
+    const {email} = req
+    const user = await User.findOne({email})
+    delete user.password
+    journalIds = user.journals
+    user.journals = []
+    for (let journalId of journalIds) {
+      let journal = await Journal.findById(journalId)
+      user.journals.push(journal)
+    }
   res.json({user})
+  } catch (error) {
+    // console.log(error)
+    let resp = new ResponseObject(500, error.message, 'error', {})
+    res.status(resp.statusCode).json(resp.data)
+  }
 }
 
 module.exports.getUser = getUser

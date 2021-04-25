@@ -4,7 +4,7 @@ const apiRouter = express.Router();
 let authentication = require('./authentication/routes/userAuthentication');
 let journals = require('./journals/routes/journalRoutes');
 
-apiRouter.use('/authentication', authentication);
+apiRouter.use('/auth', authentication);
 apiRouter.use('/journals', journals);
 
 apiRouter.get('*', (req, res) => {
