@@ -11,20 +11,6 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET
 })
 
-const uploadImage = (fileName, buffer) => {
-  let params = {
-    Bucket: process.env.AWS_BUCKET,
-    Key: `${v4()}.${fileName[fileName.length-1]}`,
-    Body: buffer
-  }
-  s3.upload(params, (err, data) => {
-    if (err) {
-      return 
-    }
-    return data.Location
-  })
-}
-
 const GetAllJournals = async (req, res) => {
   // for(i of seed){
   //     delete i["_id"];
@@ -97,7 +83,6 @@ const GetJournalsById = async (req, res) => {
     }
   } catch (error) {
     res.status(500);
-    console.log(error.message);
     res.json('error');
   }
 };
@@ -116,25 +101,34 @@ const createJournal = async (req, res) => {
       volume, start_page, issue, issn,
       google_scholar, abstract
     } = req.body
-    if (!authors) {authors == []}
-    const file = req.file
-    const file_link = uploadImage(file.originalName.split('.'), file.buffer)
-    if (!file) {
-      let resp = new ResponseObject(500, "Error uploading file", 'error', null)
-      return res.status(resp.statusCode).json(resp)
+    authors = authors.split(', ')
+    if (!authors) authors = []
+    const {file} = req
+    let fileName = file.originalname.split('.')
+    let params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: `${v4()}.${fileName[fileName.length-1]}`,
+      Body: file.buffer
     }
-    let journal = await Journals.create({
-      title, 'publication type': publication_type, 
-      'year of publication': year_of_publication, authors,
-      volume, 'start page': start_page, issue, issn,
-      google_scholar,abstract, file_link
+  
+    s3.upload(params, async (err, data) => {
+      if (err) {
+        let resp = new ResponseObject(500, "Error uploading file", 'error', null)
+        return res.status(resp.statusCode).json(resp)
+      }
+      let file_link = data.Location
+      let journal = await Journals.create({
+        title, 'publication type': publication_type, 
+        'year of publication': year_of_publication, authors,
+        volume, 'start page': start_page, issue, issn,
+        google_scholar,abstract, file_link
+      })
+      user.journals.push(journal._id)
+      user.save()
+      let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
+      return res.status(resp.statusCode).json(resp)
     })
-    user.journals.push(journal._id)
-    user.save()
-    let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
-    return res.status(resp.statusCode).json(resp)
   } catch (error) {
-    console.log(error)
     let resp = new ResponseObject(500, error.message, 'error', null)
     return res.status(resp.statusCode).json({resp})
   } 

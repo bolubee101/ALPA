@@ -14,7 +14,6 @@ const register = async (userDTO) => {
         'error',
         null
       );
-      // console.log(response)
       return response;
     } else {
       let hash = await bcrypt.hash(userDTO.password, 10);
@@ -33,7 +32,7 @@ const register = async (userDTO) => {
       return response;
     }
   } catch (error) {
-    console.log('error');
+    //
   }
 };
 
@@ -70,7 +69,7 @@ const login = async (userDTO) => {
       return response;
     }
   } catch (error) {
-    console.log('error');
+    //
   }
 };
 
