@@ -9,11 +9,7 @@ const user = require('./profiles/profileRoutes')
 const {verifyToken} = require('./verifyUser')
 
 
-const storage = multer.memoryStorage({
-  destination: (req, file, cb) => {
-    cb(null, '')
-  }
-})
+const storage = multer.memoryStorage()
 
 const upload = multer({storage}).single('file')
 
