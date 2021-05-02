@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
 const User = require('../../authentication/models/users');
+const axios = require('axios')
 dotenv.config()
 
 const s3 = new AWS.S3({
@@ -17,12 +18,7 @@ const GetAllJournals = async (req, res) => {
   // }
   // await Journals.create(seed);
   try {
-    let journals = await Journals.find({}).select({
-      'year of publication': 1,
-      title: 1,
-      authors: 1,
-      _id: 1,
-    });
+    let journals = await Journals.find({})
     let response = new ResponseObject(
       200,
       'journals successfully retrieved',
@@ -42,53 +38,19 @@ const GetAllJournals = async (req, res) => {
 
 const GetJournalsById = async (req, res) => {
   const id = req.params.id;
+  console.log(id)
   try {
-    let journal = await Journals.findById(id).select({
-      _id: 1,
-      title: 1,
-      'publication type': 1,
-      'year of publication':1,
-      authors: 1,
-      google_scholar: 1,
-      'refereed designation': 'Refereed',
-      'journal date': 1,
-      volume: 1,
-      'start page': 1,
-      issue: 1,
-      pagination: 1,
-      issn: 1,
-      abstract:1,
-      file_link:1
-    });
-    if (journal) {
-      let response = new ResponseObject(
-        200,
-        'journal successfully retrieved',
-        'success',
-        journal
-      );
-      res.status(response.statusCode);
-      delete response.statusCode;
-      res.json(response);
-    } else {
-      let response = new ResponseObject(
-        404,
-        'journal not found',
-        'error',
-        null
-      );
-      res.status(response.statusCode);
-      delete response.statusCode;
-      res.json(response);
-    }
+    res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
   } catch (error) {
+    console.log(error)
     res.status(500);
-    res.json('error');
+    res.json(error.message);
   }
 };
 
 const createJournal = async (req, res) => {
   let user = await User.findOne({email: req.email})
+  console.log(user)
   if (!user) {
     let response = new ResponseObject(401, "You are not authorized", 'Unauthorized', null);
     res.status(response.statusCode);
@@ -125,10 +87,11 @@ const createJournal = async (req, res) => {
       })
       user.journals.push(journal._id)
       user.save()
-      let resp = new ResponseObject(201, "Journal created successfully", 'ok', journal)
-      return res.status(resp.statusCode).json(resp)
+      axios.post(process.env.API_URL+'/update_recommendations')
+      res.status(301).redirect(process.env.API_URL+'/recommendations/'+user._id)
     })
   } catch (error) {
+    console.log(error)
     let resp = new ResponseObject(500, error.message, 'error', null)
     return res.status(resp.statusCode).json({resp})
   } 

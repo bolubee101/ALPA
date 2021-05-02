@@ -22,8 +22,7 @@ const JournalSchema = new Schema(
       required: true,
     },
     'publication type': {
-      type: String,
-      required: true,
+      type: String
     },
     'year of publication': {
       type: String,

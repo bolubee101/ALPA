@@ -2,6 +2,7 @@ const express = require('express');
 const cors=require("cors");
 const mongoose = require('mongoose');
 const dotenv = require('dotenv')
+const logger = require('morgan')
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ db.once('open', function () {
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
+app.use(logger(':method :url :status :res[content-length] - :response-time ms'))
 
 const apiRouter = require('./components/apiRouter');
 const ResponseObject = require('./utils/responseObject');
