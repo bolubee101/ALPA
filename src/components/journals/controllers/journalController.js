@@ -88,7 +88,7 @@ const createJournal = async (req, res) => {
       user.journals.push(journal._id)
       user.save()
       axios.post(process.env.API_URL+'/update_recommendations')
-      res.status(301).redirect(process.env.API_URL+'/recommendations/'+user._id)
+      res.status(301).redirect(process.env.API_URL+'/recommendations/'+user.id)
     })
   } catch (error) {
     console.log(error)
