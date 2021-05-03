@@ -36,6 +36,9 @@ const GetAllJournals = async (req, res) => {
 
 const GetJournalsById = async (req, res) => {
   const id = req.params.id;
+  let journal = await Journals.findById(id)
+  journal.views += 1
+  await journal.save()
   try {
     res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
   } catch (error) {
