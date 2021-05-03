@@ -11,6 +11,7 @@ const configuration = require('./config/configuration');
 // connect to database
 mongoose.connect(configuration.database, {
   useNewUrlParser: true,
+  useCreateIndex: true,
   useUnifiedTopology: true,
 });
 

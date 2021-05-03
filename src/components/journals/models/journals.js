@@ -49,6 +49,10 @@ const JournalSchema = new Schema(
     abstract: {
       type: String,
     },
+    views: {
+      type: Number,
+      default:0
+    },
     file_link: {
       type: String,
       required: true,

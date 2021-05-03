@@ -13,12 +13,10 @@ const s3 = new AWS.S3({
 })
 
 const GetAllJournals = async (req, res) => {
-  // for(i of seed){
-  //     delete i["_id"];
-  // }
-  // await Journals.create(seed);
+  let search = req.query.search
+  let journals = await Journals.find({})
+  if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
   try {
-    let journals = await Journals.find({})
     let response = new ResponseObject(
       200,
       'journals successfully retrieved',
@@ -38,7 +36,6 @@ const GetAllJournals = async (req, res) => {
 
 const GetJournalsById = async (req, res) => {
   const id = req.params.id;
-  console.log(id)
   try {
     res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
   } catch (error) {
