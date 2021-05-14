@@ -2,19 +2,6 @@ const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
 const Schema = mongoose.Schema;
 
-const AuthorSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-  },
-  website: {
-    type: String,
-  },
-});
-
 const JournalSchema = new Schema(
   {
     title: {
@@ -27,7 +14,6 @@ const JournalSchema = new Schema(
     'year of publication': {
       type: String,
     },
-    authors: { type : Array , "default" : [] },//collaborators
     'journal title': {
       type: String,
     },
@@ -53,9 +39,13 @@ const JournalSchema = new Schema(
       type: Number,
       default:0
     },
+    avatar_link : {
+      type: String,
+      required: true
+    },
     file_link: {
       type: String,
-      required: true,
+      required: true
     },
   },
   { timestamps: true }
