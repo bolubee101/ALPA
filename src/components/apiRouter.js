@@ -11,9 +11,12 @@ const {verifyToken} = require('./verifyUser')
 
 const storage = multer.memoryStorage()
 
-const upload = multer({storage}).single('file')
+const upload = multer({storage})
 
-apiRouter.use(upload)
+apiRouter.use(upload.fields([
+  {name: 'avatar', maxCount: 1},
+  {name: 'file', maxCount: 1}
+])) 
 
 apiRouter.use('/auth', authentication);
 apiRouter.use('/journals', journals);
