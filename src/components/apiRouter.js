@@ -17,11 +17,10 @@ apiRouter.use(upload.fields([
   {name: 'avatar', maxCount: 1},
   {name: 'file', maxCount: 1}
 ])) 
-
+apiRouter.get('/profile/:username/', getOtherUsers)
 apiRouter.use('/auth', authentication);
 apiRouter.use('/journals', journals);
 apiRouter.use('/profile', verifyToken, user)
-apiRouter.get('/profile/:username/', getOtherUsers)
 
 apiRouter.get('*', (req, res) => {
   res.status(404);
