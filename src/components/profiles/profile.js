@@ -15,7 +15,7 @@ const getUser = async (req, res) => {
     user = user.toObject()
     delete user.password;
     if (!user.avatar) {
-      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}`
+      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}?d=identicon&s=200`
     }
     let resp = new ResponseObject(200, `Successfully retrieved data for user -${user.id}`, "ok", {user})
     res.status(resp.statusCode).json({resp})
@@ -37,7 +37,7 @@ const getOtherUsers = async (req, res) => {
     user = user.toObject()
     delete user.password;
     if (!user.avatar) {
-      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}`
+      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}?d=identicon&s=200`
     }
     let resp = new ResponseObject(200, `Successfully retrieved data for user -${user.id}`, "ok", {user})
     res.status(resp.statusCode).json({resp})
