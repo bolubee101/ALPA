@@ -21,4 +21,9 @@ const getUser = async (req, res) => {
   }
 }
 
+const getOtherUsers = async (req, res) => {
+
+}
+
 module.exports.getUser = getUser
+module.exports.getOtherUsers = getOtherUsers

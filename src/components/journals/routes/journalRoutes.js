@@ -1,6 +1,6 @@
-const express = require('express');
+const { Router } = require('express');
 const { verifyToken } = require('../../verifyUser');
-let router = express.Router();
+let router = Router();
 let { 
   GetAllJournals, 
   GetJournalsById, 
