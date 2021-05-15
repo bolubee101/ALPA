@@ -27,7 +27,7 @@ const getUser = async (req, res) => {
 
 const getOtherUsers = async (req, res) => {
   try {
-    let user = await User.findOne({username: req.username})
+    let user = await User.findOne({username: req.body.username})
     journalIds = user.journals
     user.journals = []
     for (let journalId of journalIds) {
