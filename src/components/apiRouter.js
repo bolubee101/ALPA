@@ -4,6 +4,7 @@ const apiRouter = express.Router();
 
 let authentication = require('./authentication/routes/userAuthentication');
 let journals = require('./journals/routes/journalRoutes');
+const { getOtherUsers } = require('./profiles/profile');
 const user = require('./profiles/profileRoutes')
 const {verifyToken} = require('./verifyUser')
 
@@ -20,6 +21,7 @@ apiRouter.use(upload.fields([
 apiRouter.use('/auth', authentication);
 apiRouter.use('/journals', journals);
 apiRouter.use('/profile', verifyToken, user)
+apiRouter.get('/profile/:username/', getOtherUsers)
 
 apiRouter.get('*', (req, res) => {
   res.status(404);
