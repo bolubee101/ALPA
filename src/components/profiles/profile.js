@@ -48,7 +48,9 @@ const getOtherUsers = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-
+  res.json({
+    message: 'Profile updated successfully'
+  })
 }
 
 module.exports.getUser = getUser
