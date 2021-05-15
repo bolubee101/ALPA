@@ -19,13 +19,16 @@ const signup = (req, res, next) => {
   if (!userDTO.email || !ValidateEmail(userDTO.email)) {
     errors.push('email');
   }
-  if (!userDTO.password) {
+  if (!userDTO.username || userDTO.username.length < 3) {
+    errors.push('username');
+  }
+  if (!userDTO.password || userDTO.password.length < 6 || userDTO.password.length > 30) {
     errors.push('password');
   }
   if (errors.length !== 0) {
     let response = new responseObject(
       400,
-      `the following fields are missing/invalid: ${errors}`,
+      `the following fields are missing or invalid: ${errors}`,
       'error',
       null
     );
@@ -50,7 +53,7 @@ const login = (req, res, next) => {
   if (errors.length !== 0) {
     let response = new responseObject(
       400,
-      `the following fields are missing/invalid: ${errors}`,
+      `the following fields are missing or invalid: ${errors}`,
       'error',
       null
     );

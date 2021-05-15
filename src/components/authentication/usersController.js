@@ -5,12 +5,17 @@ const User = require('./models/users');
 const config = require('../../config/configuration');
 
 const register = async (userDTO) => {
-  let user = await User.findOne({ email: userDTO.email }).exec();
+  let user = await User.findOne({
+    "$or": [
+      { email: userDTO.email }, 
+      {username: userDTO.username}
+    ]
+  }).exec();
   try {
     if (user) {
       let response = new responseObject(
         409,
-        'email exists already',
+        'email or username already exists',
         'error',
         null
       );
@@ -32,7 +37,13 @@ const register = async (userDTO) => {
       return response;
     }
   } catch (error) {
-    //
+    let response = new responseObject(
+      500,
+      error.message,
+      'error',
+      null
+    );
+    return response;
   }
 };
 
@@ -53,7 +64,7 @@ const login = async (userDTO) => {
       } else {
         let response = new responseObject(
           403,
-          'Invalid email/password',
+          'Invalid email or password',
           'error',
           null
         );
