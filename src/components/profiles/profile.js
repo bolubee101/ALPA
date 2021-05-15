@@ -1,3 +1,4 @@
+const md5 = require('crypto-js/md5')
 const ResponseObject = require('../../utils/responseObject');
 const User = require('../authentication/models/users');
 const Journal = require('../journals/models/journals');
@@ -13,6 +14,9 @@ const getUser = async (req, res) => {
     }
     user = user.toObject()
     delete user.password;
+    if (!user.avatar) {
+      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}`
+    }
     let resp = new ResponseObject(200, `Successfully retrieved data for user -${user.id}`, "ok", {user})
     res.status(resp.statusCode).json({resp})
   } catch (error) {
@@ -32,6 +36,9 @@ const getOtherUsers = async (req, res) => {
     }
     user = user.toObject()
     delete user.password;
+    if (!user.avatar) {
+      user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}`
+    }
     let resp = new ResponseObject(200, `Successfully retrieved data for user -${user.id}`, "ok", {user})
     res.status(resp.statusCode).json({resp})
   } catch (error) {
