@@ -29,4 +29,25 @@ apiRouter.get('*', (req, res) => {
   });
 });
 
+apiRouter.post('*', (req, res) => {
+  res.status(404);
+  return res.json({
+    errorMessage: 'endpoint not found',
+  });
+});
+
+apiRouter.put('*', (req, res) => {
+  res.status(404);
+  return res.json({
+    errorMessage: 'endpoint not found',
+  });
+});
+
+apiRouter.delete('*', (req, res) => {
+  res.status(404);
+  return res.json({
+    errorMessage: 'endpoint not found',
+  });
+});
+
 module.exports = apiRouter;
