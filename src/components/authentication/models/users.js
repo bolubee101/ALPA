@@ -31,7 +31,12 @@ const UserSchema = new Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Journal"
     }
-  ]
+  ],
+  avatar: {
+    type: String
+  },
+  school: String,
+  degree: String
 },{timestamps: true});
 
 UserSchema.plugin(AutoIncrement, { inc_field: 'User_id' });
