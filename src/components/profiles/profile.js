@@ -6,6 +6,8 @@ const Journal = require('../journals/models/journals');
 const getUser = async (req, res) => {
   try {
     let user = await User.findOne({email: req.email})
+    user.views += 1
+    await user.save()
     journalIds = user.journals
     user.journals = []
     for (let journalId of journalIds) {
