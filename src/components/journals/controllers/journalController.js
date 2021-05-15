@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk')
+const {S3} = require('aws-sdk')
 const {v4} = require('uuid')
 const dotenv = require('dotenv')
 const Journals = require('../models/journals');
@@ -7,7 +7,7 @@ const User = require('../../authentication/models/users');
 const axios = require('axios')
 dotenv.config()
 
-const s3 = new AWS.S3({
+const s3 = new S3({
   accessKeyId: process.env.AWS_ID,
   secretAccessKey: process.env.AWS_SECRET
 })

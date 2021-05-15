@@ -1,10 +1,7 @@
 const express = require('express');
 const userController=require("../usersController");
-const register=userController.register;
-const login=userController.login;
-const bodyvalidate=require("../middlewares/validbody");
-const regBodyValidate=bodyvalidate.regBodyValidate;
-const logBodyValidate=bodyvalidate.logBodyValidate;
+const { register, login }=userController
+const {regBodyValidate, logBodyValidate}=require("../middlewares/validbody");
 
 const router = express.Router();
 router.use(express.urlencoded({ extended: true }));

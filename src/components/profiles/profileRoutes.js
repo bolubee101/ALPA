@@ -1,5 +1,5 @@
-const express = require('express');
-let router = express.Router();
+const { Router } = require('express');
+let router = Router();
 
 const { getUser } = require('./profile');
 

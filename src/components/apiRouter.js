@@ -4,7 +4,6 @@ const apiRouter = express.Router();
 
 let authentication = require('./authentication/routes/userAuthentication');
 let journals = require('./journals/routes/journalRoutes');
-const router = require('./profiles/profileRoutes');
 const user = require('./profiles/profileRoutes')
 const {verifyToken} = require('./verifyUser')
 
