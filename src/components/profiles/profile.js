@@ -29,6 +29,12 @@ const getUser = async (req, res) => {
 const getOtherUsers = async (req, res) => {
   try {
     let user = await User.findOne({username: req.params.username})
+    if (!user) {
+      let response = new ResponseObject(404, "User not found", 'not found', null);
+      res.status(response.statusCode);
+      delete response.statusCode;
+      return res.json(response);
+    }
     journalIds = user.journals
     user.journals = []
     for (let journalId of journalIds) {
