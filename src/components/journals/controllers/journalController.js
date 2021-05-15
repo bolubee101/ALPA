@@ -12,6 +12,22 @@ const s3 = new AWS.S3({
   secretAccessKey: process.env.AWS_SECRET
 })
 
+const uploadFile = async file => {
+  let fileName = file.originalname.split('.')
+  let params = {
+    Bucket: process.env.AWS_BUCKET,
+    Key: `${v4()}.${fileName[fileName.length-1]}`,
+    Body: file.buffer
+  }
+  s3.upload(params, async (err, data) => {
+    if (err) {
+      let resp = new ResponseObject(500, "Error uploading file", 'error', null)
+      return res.status(resp.statusCode).json(resp)
+    }
+    return await data.Location
+  })
+}
+
 const GetAllJournals = async (req, res) => {
   let search = req.query.search
   let journals = await Journals.find({})
@@ -59,37 +75,34 @@ const createJournal = async (req, res) => {
   }
   try {
     let {
-      title, publication_type, year_of_publication, authors,
+      title, publication_type, year_of_publication,
       volume, start_page, issue, issn,
       google_scholar, abstract
     } = req.body
-    authors = authors.split(', ')
-    if (!authors) authors = []
-    const {file} = req
-    let fileName = file.originalname.split('.')
-    let params = {
-      Bucket: process.env.AWS_BUCKET,
-      Key: `${v4()}.${fileName[fileName.length-1]}`,
-      Body: file.buffer
-    }
-  
-    s3.upload(params, async (err, data) => {
-      if (err) {
-        let resp = new ResponseObject(500, "Error uploading file", 'error', null)
-        return res.status(resp.statusCode).json(resp)
-      }
-      let file_link = data.Location
-      let journal = await Journals.create({
-        title, 'publication type': publication_type, 
-        'year of publication': year_of_publication, authors,
-        volume, 'start page': start_page, issue, issn,
-        google_scholar,abstract, file_link
-      })
-      user.journals.push(journal._id)
-      user.save()
-      axios.post(process.env.API_URL+'/update_recommendations')
-      res.status(301).redirect(process.env.API_URL+'/recommendations/'+user.id)
+    user = user.toObject()
+    delete user.password
+    const {files} = req
+    console.log(files.file)
+    console.log(files.avatar)
+    res.json({
+      avatar: files.file,
+      file: files.avatar,
+      user
     })
+    let file_link = await uploadFile(files.file)
+    if (file_link.statusCode) return res.status(file_link.statusCode).json({file_link})
+    let avatar = await uploadFile(files.file)
+    if (avatar.statusCode) return res.status(avatar.statusCode).json({avatar})
+    let journal = await Journals.create({
+      title, 'publication type': publication_type, 
+      'year of publication': year_of_publication, authors,
+      volume, 'start page': start_page, issue, issn,
+      google_scholar,abstract, file_link, avatar
+    })
+    user.journals.push(journal._id)
+    user.save()
+    axios.post(process.env.API_URL+'/update_recommendations')
+    res.status(301).redirect(process.env.API_URL+'/recommendations/'+user.id)
   } catch (error) {
     console.log(error)
     let resp = new ResponseObject(500, error.message, 'error', null)
