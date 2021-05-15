@@ -6,8 +6,6 @@ const Journal = require('../journals/models/journals');
 const getUser = async (req, res) => {
   try {
     let user = await User.findOne({email: req.email})
-    user.views += 1
-    await user.save()
     journalIds = user.journals
     user.journals = []
     for (let journalId of journalIds) {
@@ -31,6 +29,8 @@ const getUser = async (req, res) => {
 const getOtherUsers = async (req, res) => {
   try {
     let user = await User.findOne({username: req.params.username})
+    user.views += 1
+    await user.save()
     if (!user) {
       let response = new ResponseObject(404, "User not found", 'not found', null);
       res.status(response.statusCode);
