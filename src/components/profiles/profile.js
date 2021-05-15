@@ -40,5 +40,10 @@ const getOtherUsers = async (req, res) => {
   }
 }
 
+const updateProfile = async (req, res) => {
+
+}
+
 module.exports.getUser = getUser
 module.exports.getOtherUsers = getOtherUsers
+module.exports.updateProfile = updateProfile
