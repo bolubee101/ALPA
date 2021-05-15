@@ -17,6 +17,7 @@ const getUser = async (req, res) => {
     if (!user.avatar) {
       user.avatar = `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase())}?d=identicon&s=200`
     }
+    user.currentUser = true
     let resp = new ResponseObject(200, `Successfully retrieved data for user -${user.id}`, "ok", {user})
     res.status(resp.statusCode).json({resp})
   } catch (error) {
