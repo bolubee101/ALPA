@@ -19,13 +19,12 @@ const uploadFile = async file => {
     Key: `${v4()}.${fileName[fileName.length-1]}`,
     Body: file.buffer
   }
-  s3.upload(params, async (err, data) => {
-    if (err) {
-      let resp = new ResponseObject(500, "Error uploading file", 'error', null)
-      return res.status(resp.statusCode).json(resp)
-    }
-    return await data.Location
-  })
+  try {
+    let link = await s3.upload(params).promise()
+    return link.Location
+  } catch (error) {
+    return new ResponseObject(500, error.message, 'error', null)
+  }
 }
 
 const GetAllJournals = async (req, res) => {
@@ -66,12 +65,11 @@ const GetJournalsById = async (req, res) => {
 
 const createJournal = async (req, res) => {
   let user = await User.findOne({email: req.email})
-  console.log(user)
   if (!user) {
     let response = new ResponseObject(401, "You are not authorized", 'Unauthorized', null);
     res.status(response.statusCode);
     delete response.statusCode;
-    res.json(response);
+    return res.json(response);
   }
   try {
     let {
@@ -79,29 +77,37 @@ const createJournal = async (req, res) => {
       volume, start_page, issue, issn,
       google_scholar, abstract
     } = req.body
-    user = user.toObject()
-    delete user.password
     const {files} = req
-    console.log(files.file)
-    console.log(files.avatar)
-    res.json({
-      avatar: files.file,
-      file: files.avatar,
-      user
-    })
-    let file_link = await uploadFile(files.file)
+    if (!['image/png', 'image/jpeg'].includes(files.avatar[0].mimetype)) {
+      let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
+      res.status(response.statusCode);
+      delete response.statusCode;
+      return res.json(response);
+    }
+    if (!['application/pdf'].includes(files.file[0].mimetype)) {
+      let response = new ResponseObject(400, "You need to upload a pdf", 'Bad data', null);
+      res.status(response.statusCode);
+      delete response.statusCode;
+      return res.json(response);
+    }
+    let file_link = await uploadFile(files.file[0])
+    console.log('file link', file_link)
     if (file_link.statusCode) return res.status(file_link.statusCode).json({file_link})
-    let avatar = await uploadFile(files.file)
-    if (avatar.statusCode) return res.status(avatar.statusCode).json({avatar})
+    let avatar_link = await uploadFile(files.avatar[0])
+    console.log('avatar', avatar_link)
+    if (avatar_link.statusCode) return res.status(avatar_link.statusCode).json({avatar_link})
     let journal = await Journals.create({
       title, 'publication type': publication_type, 
-      'year of publication': year_of_publication, authors,
+      'year of publication': year_of_publication,
       volume, 'start page': start_page, issue, issn,
-      google_scholar,abstract, file_link, avatar
+      google_scholar,abstract, file_link, avatar_link
     })
     user.journals.push(journal._id)
     user.save()
-    axios.post(process.env.API_URL+'/update_recommendations')
+    user = user.toObject()
+    delete user.password
+    console.log(user)
+    // axios.post(process.env.API_URL+'/update_recommendations')
     res.status(301).redirect(process.env.API_URL+'/recommendations/'+user.id)
   } catch (error) {
     console.log(error)
