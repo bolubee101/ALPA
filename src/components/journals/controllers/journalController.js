@@ -56,7 +56,7 @@ const GetJournalsById = async (req, res) => {
   await journal.save()
   try {
     let data = await axios.get(process.env.API_URL+'/recommendations/'+id)
-    let response = new ResponseObject(200, 'successfully retrieved journal', 'ok', data);
+    let response = new ResponseObject(200, 'successfully retrieved journal', 'ok', data.data);
     res.status(response.statusCode).json({response})
   } catch (error) {
     console.log(error.response.status)
