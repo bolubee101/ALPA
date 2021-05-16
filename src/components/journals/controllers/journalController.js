@@ -55,9 +55,9 @@ const GetJournalsById = async (req, res) => {
   journal.views += 1
   await journal.save()
   try {
-    let response = new ResponseObject(400, journal.toObject(), 'error', null);
+    let data = await axios.get(process.env.API_URL+'/recommendations/'+id)
+    let response = new ResponseObject(200, 'successfully retrieved journal', 'ok', data);
     res.status(response.statusCode).json({response})
-    // res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
   } catch (error) {
     console.log(error)
     res.status(500);
@@ -109,8 +109,10 @@ const createJournal = async (req, res) => {
     user = user.toObject()
     delete user.password
     console.log(user)
-    // axios.post(process.env.API_URL+'/update_recommendations')
-    res.status(301).redirect(process.env.API_URL+'/recommendations/'+user.id)
+    await axios.post(process.env.API_URL+'/update_recommendations')
+    let data = await axios.get(process.env.API_URL+'/recommendations/'+user.id)
+    let response = new ResponseObject(200, 'successfully created journal', 'ok', data);
+    res.status(response.statusCode).json({response})
   } catch (error) {
     console.log(error)
     let resp = new ResponseObject(500, error.message, 'error', null)
