@@ -79,6 +79,7 @@ const createJournal = async (req, res) => {
       volume, start_page, issue, issn,
       google_scholar, abstract
     } = req.body
+    console.log(req)
     const {files} = req
     if (!['image/png', 'image/jpeg'].includes(files.avatar[0].mimetype)) {
       let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
