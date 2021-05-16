@@ -110,7 +110,7 @@ const createJournal = async (req, res) => {
     user = user.toObject()
     delete user.password
     console.log(user)
-    await axios.post(process.env.API_URL+'/update_recommendations')
+    await axios.get(process.env.API_URL+'/update_recommendations')
     let data = await axios.get(process.env.API_URL+'/recommendations/'+user.id)
     let response = new ResponseObject(200, 'successfully created journal', 'ok', data);
     res.status(response.statusCode).json({response})
