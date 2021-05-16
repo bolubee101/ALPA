@@ -90,6 +90,7 @@ const changeAvatar = async (req, res) => {
   try {
     let user = await User.findOne({email: req.email})
     let avatar= req.files.avatar
+    console.log(req.files)
     if (!['image/png', 'image/jpeg'].includes(avatar[0].mimetype)) {
       let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
       res.status(response.statusCode);
