@@ -23,7 +23,7 @@ db.once('open', function () {
 
 // initialize app
 const app = express();
-app.use(cors('*'));
+app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(logger(':method :url :status :res[content-length] - :response-time ms'))
 
