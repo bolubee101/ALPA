@@ -1,4 +1,4 @@
-const {S3} = require('aws-sdk')
+const {S3, RDS} = require('aws-sdk')
 const {v4} = require('uuid')
 const dotenv = require('dotenv')
 const Journals = require('../models/journals');
@@ -55,7 +55,9 @@ const GetJournalsById = async (req, res) => {
   journal.views += 1
   await journal.save()
   try {
-    res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
+    let response = new ResponseObject(400, journal.toObject(), 'error', null);
+    RDS.status(response.statusCode).json({response})
+    // res.status(301).redirect(process.env.API_URL+'/recommendations/'+id)
   } catch (error) {
     console.log(error)
     res.status(500);
