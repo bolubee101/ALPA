@@ -59,9 +59,9 @@ const GetJournalsById = async (req, res) => {
     let response = new ResponseObject(200, 'successfully retrieved journal', 'ok', data);
     res.status(response.statusCode).json({response})
   } catch (error) {
-    console.log(error)
-    res.status(500);
-    res.json(error.message);
+    console.log(error.response.status)
+    error.response.status ? res.status(error.response.status) : res.status(500);
+    error.response.data ? res.json(error.response.data) : res.json(error.message)
   }
 };
 
