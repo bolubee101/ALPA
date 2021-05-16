@@ -90,7 +90,6 @@ const changeAvatar = async (req, res) => {
   try {
     let user = await User.findOne({email: req.email})
     let avatar= req.files.avatar
-    console.log(avatar)
     if (!['image/png', 'image/jpeg'].includes(avatar[0].mimetype)) {
       let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
       res.status(response.statusCode);
@@ -98,7 +97,6 @@ const changeAvatar = async (req, res) => {
       return res.json(response);
     }
     let avatar_link = await uploadFile(avatar[0])
-    console.log('avatar link', avatar_link)
     if (avatar_link.statusCode) return res.status(avatar_link.statusCode).json({avatar_link})
     user.avatar = avatar_link
     await user.save()
