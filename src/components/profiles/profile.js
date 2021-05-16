@@ -57,9 +57,32 @@ const getOtherUsers = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-  res.json({
-    message: 'Profile updated successfully'
-  })
+  try {
+    let user = await User.findOne({email: req.email})
+    let {
+      name, username, email, degree, school
+    } = req.body
+    user.name = name
+    user.email=email
+    user.username=username
+    user.degree=degree
+    user.school=school
+    await user.save()
+    let response = new ResponseObject(
+      200,
+      'successfully updated user',
+      'success',
+      user
+    );
+    res.status(response.statusCode);
+    delete response.statusCode;
+    res.json({response});
+  } catch (error) {
+    let response = new ResponseObject(400, error.message, 'error', null);
+    res.status(response.statusCode);
+    delete response.statusCode;
+    res.json({response});
+  }
 }
 
 module.exports.getUser = getUser
