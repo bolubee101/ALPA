@@ -40,7 +40,8 @@ const JournalSchema = new Schema(
     },
     avatar_link : {
       type: String,
-      required: true
+      required: true,
+      default: 'https://ik.imagekit.io/uknntomzctt/Rectangle_44__3__n7mOd_Kts.png'
     },
     file_link: {
       type: String,
