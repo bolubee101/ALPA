@@ -1,6 +1,7 @@
 const md5 = require('crypto-js/md5')
 const ResponseObject = require('../../utils/responseObject');
 const User = require('../authentication/models/users');
+const { uploadFile } = require('../journals/controllers/journalController');
 const Journal = require('../journals/models/journals');
 
 const getUser = async (req, res) => {
@@ -85,6 +86,35 @@ const updateProfile = async (req, res) => {
   }
 }
 
+const changeAvatar = async (req, res) => {
+  try {
+    let user = await User.findOne({email: req.email})
+    let {
+      avatar
+    } = req.files
+    let avatar_link = await uploadFile(avatar[0])
+    console.log('avatar link', avatar_link)
+    if (avatar_link.statusCode) return res.status(avatar_link.statusCode).json({avatar_link})
+    user.avatar = avatar_link
+    await user.save()
+    let response = new ResponseObject(
+      200,
+      'successfully updated user',
+      'success',
+      user.avatar
+    );
+    res.status(response.statusCode);
+    delete response.statusCode;
+    res.json({response});
+  } catch (error) {
+    let response = new ResponseObject(400, error.message, 'error', null);
+    res.status(response.statusCode);
+    delete response.statusCode;
+    res.json({response});
+  }
+}
+
 module.exports.getUser = getUser
 module.exports.getOtherUsers = getOtherUsers
 module.exports.updateProfile = updateProfile
+module.exports.changeAvatar = changeAvatar

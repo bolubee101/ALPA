@@ -123,3 +123,4 @@ const createJournal = async (req, res) => {
 module.exports.GetAllJournals = GetAllJournals;
 module.exports.GetJournalsById = GetJournalsById;
 module.exports.createJournal = createJournal
+module.exports.uploadFile = uploadFile
