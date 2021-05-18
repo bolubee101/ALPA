@@ -77,7 +77,7 @@ const createJournal = async (req, res) => {
     let {
       title, publication_type, year_of_publication,
       volume, start_page, issue, issn,
-      google_scholar, abstract
+      google_scholar, abstract, authors
     } = req.body
     console.log(req)
     const {files} = req
@@ -103,7 +103,7 @@ const createJournal = async (req, res) => {
       title, 'publication type': publication_type, 
       'year of publication': year_of_publication,
       volume, 'start page': start_page, issue, issn,
-      google_scholar,abstract, file_link
+      google_scholar,abstract, file_link, authors
     })
     user.journals.push(journal._id)
     user.save()

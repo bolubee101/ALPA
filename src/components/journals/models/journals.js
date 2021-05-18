@@ -22,6 +22,10 @@ const JournalSchema = new Schema(
     'start page': {
       type: String,
     },
+    authors: {
+      type: Array,
+      default: []
+    },
     issue: {
       type: String,
     },
