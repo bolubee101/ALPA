@@ -124,6 +124,7 @@ const contactAuthor = (req, res) => {
   let {
     name, email, subject, message, authorMail, authorName, authorTitle
   } = req.body
+  console.log(req.body)
   message = `Hello ${authorName}, ${name} contacted you with this email: ${email} on your paper title ${authorTitle}, 
   You can view the body of the message below, To reply, you can reply via the user's mail directly
   ${message}`
