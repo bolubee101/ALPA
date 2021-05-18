@@ -127,13 +127,13 @@ const contactAuthor = (req, res) => {
   message = `Hello ${authorName}, ${name} contacted you with this email: ${email} on your paper title ${authorTitle}, 
   You can view the body of the message below, To reply, you can reply via the user's mail directly
   ${message}`
-  sendMail(
+  let mail = sendMail(
     service='gmail',
     to=authorMail,
     subject=subject, text=message,
     bcc=email
   )
-  let response = new ResponseObject(200, 'message sent successfully', 'success', null);
+  let response = new ResponseObject(200, 'message sent successfully', 'success', {mail});
   res.status(response.statusCode);
   delete response.statusCode;
   res.json({response});

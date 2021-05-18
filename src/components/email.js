@@ -3,23 +3,26 @@ const {config} = require('dotenv')
 
 config()
 
+const service='gmail'
+
 const senderObject = {
   user: process.env.AUTH_EMAIL || 'youremail@gmail.com',
   pass: process.env.AUTH_PASS || 'yourpassword'
 }
-const sendMail = (
-  service='gmail', 
+
+const transporter = nodemailer.createTransport({
+  service,
+  auth: senderObject
+});
+console.log(transporter)
+
+const sendMail = ( 
   to='youremail@gmail.com', 
   subject="Hello", 
   text="",
   bcc=null
 ) => {
   try {
-    const transporter = nodemailer.createTransport({
-      service,
-      auth: senderObject
-    });
-    
     const mailOptions = {
       from: senderObject.user,
       to,
