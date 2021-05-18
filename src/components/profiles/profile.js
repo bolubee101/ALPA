@@ -128,7 +128,6 @@ const contactAuthor = (req, res) => {
   You can view the body of the message below, To reply, you can reply via the user's mail directly
   ${message}`
   let mail = sendMail(
-    service='gmail',
     to=authorMail,
     subject=subject, text=message,
     bcc=email
