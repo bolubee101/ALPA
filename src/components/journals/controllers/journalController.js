@@ -29,8 +29,9 @@ const uploadFile = async file => {
 
 const GetAllJournals = async (req, res) => {
   let search = req.query.search
-  let journals = await Journals.find({})
+  let journals
   if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
+  else {journals = await Journals.find({})}
   try {
     let response = new ResponseObject(
       200,

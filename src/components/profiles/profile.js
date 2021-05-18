@@ -1,6 +1,7 @@
 const md5 = require('crypto-js/md5')
 const ResponseObject = require('../../utils/responseObject');
 const User = require('../authentication/models/users');
+const { sendMail } = require('../email');
 const { uploadFile } = require('../journals/controllers/journalController');
 const Journal = require('../journals/models/journals');
 
@@ -118,7 +119,30 @@ const changeAvatar = async (req, res) => {
   }
 }
 
+const contactAuthor = (req, res) => {
+ try {
+  let {
+    name, email, subject, message, authorMail, authorName, authorTitle
+  } = req.body
+  message = `Hello ${authorName}, ${name} contacted you with this email: ${email} on your paper title ${authorTitle}, 
+  You can view the body of the message below, To reply, you can reply via the user's mail directly
+  ${message}`
+  sendMail(
+    service='gmail',
+    to=authorMail,
+    subject=subject, text=message,
+    bcc=email
+  )
+ }  catch (error) {
+  let response = new ResponseObject(400, error.message, 'error', null);
+  res.status(response.statusCode);
+  delete response.statusCode;
+  res.json({response});
+ }
+}
+
 module.exports.getUser = getUser
 module.exports.getOtherUsers = getOtherUsers
 module.exports.updateProfile = updateProfile
 module.exports.changeAvatar = changeAvatar
+module.exports.contactAuthor = contactAuthor
