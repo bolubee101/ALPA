@@ -133,6 +133,10 @@ const contactAuthor = (req, res) => {
     subject=subject, text=message,
     bcc=email
   )
+  let response = new ResponseObject(200, 'message sent successfully', 'success', null);
+  res.status(response.statusCode);
+  delete response.statusCode;
+  res.json({response});
  }  catch (error) {
   let response = new ResponseObject(400, error.message, 'error', null);
   res.status(response.statusCode);

@@ -4,7 +4,7 @@ const apiRouter = express.Router();
 
 let authentication = require('./authentication/routes/userAuthentication');
 let journals = require('./journals/routes/journalRoutes');
-const { getOtherUsers } = require('./profiles/profile');
+const { getOtherUsers, contactAuthor } = require('./profiles/profile');
 const user = require('./profiles/profileRoutes')
 const {verifyToken} = require('./verifyUser')
 
@@ -18,6 +18,7 @@ apiRouter.use(upload.fields([
   {name: 'file', maxCount: 1}
 ])) 
 apiRouter.get('/profile/:username/', getOtherUsers)
+apiRouter.post('/contact/:username', contactAuthor)
 apiRouter.use('/auth', authentication);
 apiRouter.use('/journals', journals);
 apiRouter.use('/profile', verifyToken, user)
