@@ -28,7 +28,8 @@ const sendMail = (
       to,
       subject,
       text,
-      bcc : bcc && bcc
+      bcc : bcc && [bcc],
+      replyTo: bcc && bcc
     };
     
     transporter.sendMail(mailOptions, (error, info) => {
