@@ -96,9 +96,9 @@ const createJournal = async (req, res) => {
     let file_link = await uploadFile(files.file[0])
     console.log('file link', file_link)
     if (file_link.statusCode) return res.status(file_link.statusCode).json({file_link})
-    let avatar_link = await uploadFile(files.avatar[0])
-    console.log('avatar', avatar_link)
-    if (avatar_link.statusCode) return res.status(avatar_link.statusCode).json({avatar_link})
+    // let avatar_link = await uploadFile(files.avatar[0])
+    // console.log('avatar', avatar_link)
+    // if (avatar_link.statusCode) return res.status(avatar_link.statusCode).json({avatar_link})
     let journal = await Journals.create({
       title, 'publication type': publication_type, 
       'year of publication': year_of_publication,
