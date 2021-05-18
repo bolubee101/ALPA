@@ -81,12 +81,12 @@ const createJournal = async (req, res) => {
     } = req.body
     console.log(req)
     const {files} = req
-    if (!['image/png', 'image/jpeg'].includes(files.avatar[0].mimetype)) {
-      let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
-      res.status(response.statusCode);
-      delete response.statusCode;
-      return res.json(response);
-    }
+    // if (!['image/png', 'image/jpeg'].includes(files.avatar[0].mimetype)) {
+    //   let response = new ResponseObject(400, "You need to upload an image", 'Bad data', null);
+    //   res.status(response.statusCode);
+    //   delete response.statusCode;
+    //   return res.json(response);
+    // }
     if (!['application/pdf'].includes(files.file[0].mimetype)) {
       let response = new ResponseObject(400, "You need to upload a pdf", 'Bad data', null);
       res.status(response.statusCode);
