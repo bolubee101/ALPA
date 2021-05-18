@@ -47,4 +47,4 @@ const sendMail = (
   }
 }
 
-module.exports = sendMail
+module.exports.sendMail = sendMail
