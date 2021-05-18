@@ -5,6 +5,7 @@ const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
 const User = require('../../authentication/models/users');
 const axios = require('axios')
+var natural = require('natural');
 dotenv.config()
 
 const s3 = new S3({
@@ -30,8 +31,18 @@ const uploadFile = async file => {
 const GetAllJournals = async (req, res) => {
   let search = req.query.search
   let journals
-  if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
-  else {journals = await Journals.find({})}
+  if (req.query.search){
+    natural.PorterStemmer.attach();
+    let terms=search.tokenizeAndStem();
+
+    let query = {'$and': []};
+    terms.forEach(term => {
+       let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
+       query['$and'].push(queryFrag);
+    });
+
+    journals = await Journals.find(query);
+  } else {journals = await Journals.find({})}
   try {
     let response = new ResponseObject(
       200,
