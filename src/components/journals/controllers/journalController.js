@@ -36,12 +36,12 @@ const GetAllJournals = async (req, res) => {
     const stemmer = natural.PorterStemmer 
     let terms=stemmer.tokenizeAndStem(search)
     console.log(terms)
-      let query = {'$and': []};
+      let query = {'$or': []};
       terms.forEach(term => {
          let queryFrag = {title: {'$regex': term, '$options': 'i'}};
-         query['$and'].push(queryFrag);
+         query['$or'].push(queryFrag);
          queryFrag={abstract: {'$regex': term, '$options': 'i'}};
-         query['$and'].push(queryFrag);
+         query['$or'].push(queryFrag);
       });
   console.log(query)
       journals = await Journals.find(query);
