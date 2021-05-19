@@ -28,8 +28,8 @@ const uploadFile = async file => {
 }
 
 const GetAllJournals = async (req, res) => {
-  // let search = req.query.search
-  // let journals
+  let search = req.query.search
+  let journals
   // if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
   if (req.query.search){
     var natural = require('natural');
