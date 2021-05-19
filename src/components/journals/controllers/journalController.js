@@ -37,7 +37,7 @@ const GetAllJournals = async (req, res) => {
     let terms=stemmer.tokenizeAndStem('search')
       let query = {'$and': []};
       terms.forEach(term => {
-         let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
+         let queryFrag = {title: {'$regex': term, '$options': 'i'}};
          query['$and'].push(queryFrag);
       });
   
