@@ -32,14 +32,9 @@ const GetAllJournals = async (req, res) => {
   let journals
   // if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
   if (req.query.search){
-    var natural = require('natural');
-    var tokenizer = new natural.WordTokenizer(); 
-    var tokens = tokenizer.tokenize(search);
-    console.log(tokens); 
-    var terms = natural.PorterStemmer.stem(tokens); 
-      console.log("the terms are:  "+terms);
-      terms=terms.split("");
-  
+    const natural = require('natural')
+    const stemmer = natural.PorterStemmer 
+    let terms=stemmer.tokenizeAndStem('search')
       let query = {'$and': []};
       terms.forEach(term => {
          let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
