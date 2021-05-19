@@ -34,7 +34,8 @@ const GetAllJournals = async (req, res) => {
   if (req.query.search){
     var natural = require('natural');
     var tokenizer = new natural.WordTokenizer(); 
-    var tokens = tokenizer.tokenize(search); 
+    var tokens = tokenizer.tokenize(search);
+    console.log(tokens); 
     var terms = natural.PorterStemmer.stem(tokens); 
       console.log("the terms are:  "+terms);
       terms=terms.split("");
