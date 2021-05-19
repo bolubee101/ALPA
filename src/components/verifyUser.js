@@ -1,5 +1,6 @@
 const { jwtsecret } = require('../config/configuration');
 const {verify} = require('jsonwebtoken');
+const ResponseObject = require('../utils/responseObject');
 
 const verifyToken = async (req, res, next) => {
   const tokenHeader = req.headers['authorization']
