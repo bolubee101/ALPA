@@ -5,7 +5,6 @@ const Journals = require('../models/journals');
 const ResponseObject = require('../../../utils/responseObject');
 const User = require('../../authentication/models/users');
 const axios = require('axios')
-var natural = require('natural');
 dotenv.config()
 
 const s3 = new S3({
@@ -31,21 +30,22 @@ const uploadFile = async file => {
 const GetAllJournals = async (req, res) => {
   let search = req.query.search
   let journals
-  if (req.query.search){
+  if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
 
-    var tokenizer = new natural.WordTokenizer(); 
-  var tokens = tokenizer.tokenize(search); 
-  var terms = natural.PorterStemmer.stem(tokens); 
-    console.log("the terms are:  "+terms);
+  // var tokenizer = new natural.WordTokenizer(); 
+  // var tokens = tokenizer.tokenize(search); 
+  // var terms = natural.PorterStemmer.stem(tokens); 
+  //   console.log("the terms are:  "+terms);
 
-    let query = {'$and': []};
-    terms.forEach(term => {
-       let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
-       query['$and'].push(queryFrag);
-    });
+  //   let query = {'$and': []};
+  //   terms.forEach(term => {
+  //      let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
+  //      query['$and'].push(queryFrag);
+  //   });
 
-    journals = await Journals.find(query);
-  } else {journals = await Journals.find({})}
+  //   journals = await Journals.find(query);
+
+  else {journals = await Journals.find({})}
   try {
     let response = new ResponseObject(
       200,
