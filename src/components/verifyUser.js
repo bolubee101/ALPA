@@ -10,6 +10,7 @@ const verifyToken = async (req, res, next) => {
         req.email = email
         next()
       } catch (error) {
+        console.log(error.message)
         let response = new ResponseObject(400, "Unable to verify user", 'Unauthorized', null);
         res.status(response.statusCode);
         delete response.statusCode;
