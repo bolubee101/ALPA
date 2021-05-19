@@ -14,7 +14,6 @@ const transporter = nodemailer.createTransport({
   service,
   auth: senderObject
 });
-console.log(transporter)
 
 const sendMail = ( 
   to='youremail@gmail.com', 

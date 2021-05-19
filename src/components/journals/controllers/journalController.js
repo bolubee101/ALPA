@@ -43,7 +43,7 @@ const GetAllJournals = async (req, res) => {
          queryFrag={abstract: {'$regex': term, '$options': 'i'}};
          query['$and'].push(queryFrag);
       });
-  
+  console.log(query)
       journals = await Journals.find(query);
   }else {journals = await Journals.find({})}
   try {
