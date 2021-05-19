@@ -34,7 +34,7 @@ const GetAllJournals = async (req, res) => {
   if (req.query.search){
     const natural = require('natural')
     const stemmer = natural.PorterStemmer 
-    let terms=stemmer.tokenizeAndStem('search')
+    let terms=stemmer.tokenizeAndStem(search)
     console.log(terms)
       let query = {'$and': []};
       terms.forEach(term => {
