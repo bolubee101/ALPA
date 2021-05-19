@@ -28,24 +28,25 @@ const uploadFile = async file => {
 }
 
 const GetAllJournals = async (req, res) => {
-  let search = req.query.search
-  let journals
-  if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
-
-  // var tokenizer = new natural.WordTokenizer(); 
-  // var tokens = tokenizer.tokenize(search); 
-  // var terms = natural.PorterStemmer.stem(tokens); 
-  //   console.log("the terms are:  "+terms);
-
-  //   let query = {'$and': []};
-  //   terms.forEach(term => {
-  //      let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
-  //      query['$and'].push(queryFrag);
-  //   });
-
-  //   journals = await Journals.find(query);
-
-  else {journals = await Journals.find({})}
+  // let search = req.query.search
+  // let journals
+  // if (req.query.search) journals = await Journals.find({title: new RegExp(search, 'i')})
+  if (req.query.search){
+    var natural = require('natural');
+    var tokenizer = new natural.WordTokenizer(); 
+    var tokens = tokenizer.tokenize(search); 
+    var terms = natural.PorterStemmer.stem(tokens); 
+      console.log("the terms are:  "+terms);
+      terms=terms.split("");
+  
+      let query = {'$and': []};
+      terms.forEach(term => {
+         let queryFrag = `{title: {'$regex': ${term}, '$options': 'i'}},{abstract: {'$regex': ${term}, '$options': 'i'}}`;
+         query['$and'].push(queryFrag);
+      });
+  
+      journals = await Journals.find(query);
+  }else {journals = await Journals.find({})}
   try {
     let response = new ResponseObject(
       200,
